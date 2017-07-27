@@ -73,13 +73,8 @@ public class ToDosResource
 			@FormParam("description") final String description, @Context final HttpServletResponse servletResponse)
 			throws IOException
 	{
-
-		final ToDo todo = new ToDo(id, summary);
-		if (description != null)
-		{
-			todo.setDescription(description);
-		}
-		ToDoDao.instance.getModel().put(id, todo);
+		final ToDo todo = new ToDo(id, summary, description);
+		ToDoDao.instance.insertToDo(todo);
 
 		servletResponse.sendRedirect("../create_todo.html");
 	}

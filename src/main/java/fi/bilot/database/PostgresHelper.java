@@ -70,7 +70,7 @@ public class PostgresHelper
 
 		final String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, columnsBuilder.toString(),
 				valuesBuilder.toString());
-		System.out.print("Executing SQL query: '" + query + "'... ");
+		System.out.print("Executing SQL insert: '" + query + "'... ");
 		final int queryReturnValue = this.conn.createStatement().executeUpdate(query);
 		System.out.println("OK");
 

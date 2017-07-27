@@ -34,14 +34,17 @@ public class ToDoResource
 
 	// Application integration
 	@GET
-	@Produces(
-	{ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces(MediaType.APPLICATION_XML)
+	//@Produces(
+	//{ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public ToDo getTodo()
 	{
+		System.out.println("Entering @GET for Application integration...");
 		final ToDo todo = ToDoDao.instance.getModel().get(id);
 		if (todo == null)
 		{
-			throw new RuntimeException("Get: Todo with " + id + " not found");
+			System.out.println("Get: Todo with id " + id + " not found");
+			//throw new RuntimeException("Get: Todo with " + id + " not found");
 		}
 		return todo;
 	}
@@ -51,10 +54,11 @@ public class ToDoResource
 	@Produces(MediaType.TEXT_HTML)
 	public ToDo getToDoHTML()
 	{
+		System.out.println("Entering @GET for Browser...");
 		final ToDo todo = ToDoDao.instance.getModel().get(id);
 		if (todo == null)
 		{
-			throw new RuntimeException("Get: Todo with " + id + " not found");
+			System.out.println("ToDo with ID " + this.id + " does not exist!");
 		}
 		return todo;
 	}
