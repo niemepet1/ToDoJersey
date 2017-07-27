@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 
 public class PostgresHelper
@@ -42,5 +43,37 @@ public class PostgresHelper
 	public ResultSet execQuery(final String query) throws SQLException
 	{
 		return this.conn.createStatement().executeQuery(query);
+	}
+
+	public int insert(final String table, final Map<String, Object> values) throws SQLException
+	{
+		final StringBuilder columnsBuilder = new StringBuilder();
+		final StringBuilder valuesBuilder = new StringBuilder();
+
+		for (final String col : values.keySet())
+		{
+			columnsBuilder.append(col).append(",");
+
+			if (values.get(col) instanceof String)
+			{
+				valuesBuilder.append("'").append(values.get(col)).append("', ");
+			}
+			else
+			{
+				valuesBuilder.append(values.get(col)).append(",");
+			}
+		}
+
+		// These are done to remove the last comma:
+		columnsBuilder.setLength(columnsBuilder.length() - 1);
+		valuesBuilder.setLength(valuesBuilder.length() - 1);
+
+		final String query = String.format("INSERT INTO %s (%s) VALUES (%s)", table, columnsBuilder.toString(),
+				valuesBuilder.toString());
+		System.out.print("Executing SQL query: '" + query + "'... ");
+		final int queryReturnValue = this.conn.createStatement().executeUpdate(query);
+		System.out.println("OK");
+
+		return queryReturnValue;
 	}
 }

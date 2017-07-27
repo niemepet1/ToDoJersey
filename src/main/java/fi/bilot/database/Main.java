@@ -20,24 +20,35 @@ public class Main
 				System.out.println("DB connected");
 			}
 
-			final String query = "SELECT * FROM todos";
+			selectAllFromTable(client, "todos");
 
-			System.out.print("Executing SQL query '" + query + "'... ");
-			final ResultSet rs = client.execQuery(query);
-			System.out.println(" OK");
+			/*
+			 * final Map<String, Object> vals = new HashMap<String, Object>(); vals.put("id", 6); vals.put("summary",
+			 * "Task inserted from Java code"); vals.put("description", "This is inserted from the executed Java code"); if
+			 * (client.insert("todos", vals) == 1) { System.out.println("Record added"); }
+			 */
 
-			while (rs.next())
-			{
-				System.out.printf("%d\t%s\t%s\n", rs.getInt(1), rs.getString(2), rs.getString(3));
-			}
+			//selectAllFromTable(client, "todos");
 		}
-		catch (ClassNotFoundException | SQLException e)
+		catch (final ClassNotFoundException | SQLException e)
 		{
 			e.printStackTrace();
 		}
 
+	}
 
+	private static void selectAllFromTable(final PostgresHelper client, final String table) throws SQLException
+	{
+		final String query = "SELECT * FROM " + table;
 
+		System.out.print("Executing SQL query '" + query + "'... ");
+		final ResultSet rs = client.execQuery(query);
+		System.out.println(" OK");
+
+		while (rs.next())
+		{
+			System.out.printf("%d\t%s\t%s\n", rs.getInt(1), rs.getString(2), rs.getString(3));
+		}
 	}
 
 }
