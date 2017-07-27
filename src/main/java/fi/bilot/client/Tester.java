@@ -26,9 +26,9 @@ public class Tester
 		final WebTarget service = client.target(getBaseURI());
 
 		// create one todo
-		final ToDo todo = new ToDo("3", "Blabla");
+		final ToDo todo = new ToDo(3, "Blabla");
 		Response response;
-		response = service.path("rest").path("todos").path(todo.getId()).request(MediaType.APPLICATION_XML)
+		response = service.path("rest").path("todos").path(Integer.toString(todo.getId())).request(MediaType.APPLICATION_XML)
 				.put(Entity.entity(todo, MediaType.APPLICATION_XML), Response.class);
 
 		System.out.println("Header string: " + response.getStringHeaders());

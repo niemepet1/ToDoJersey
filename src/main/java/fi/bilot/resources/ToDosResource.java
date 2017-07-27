@@ -69,10 +69,11 @@ public class ToDosResource
 	@POST
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public void newToDo(@FormParam("id") final String id, @FormParam("summary") final String summary,
+	public void newToDo(@FormParam("id") final int id, @FormParam("summary") final String summary,
 			@FormParam("description") final String description, @Context final HttpServletResponse servletResponse)
 			throws IOException
 	{
+
 		final ToDo todo = new ToDo(id, summary);
 		if (description != null)
 		{
@@ -90,7 +91,7 @@ public class ToDosResource
 	@GET
 	@Path("{todo}")
 	//@Produces(MediaType.TEXT_PLAIN)
-	public ToDoResource getToDo(@PathParam("todo") final String id)
+	public ToDoResource getToDo(@PathParam("todo") final int id)
 	{
 		//return "we are her displaying the task!";
 		return new ToDoResource(uriInfo, request, id);

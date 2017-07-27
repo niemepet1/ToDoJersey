@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class ToDo
 {
-	private String id;
+	private int id;
 	private String summary;
 	private String description;
 
@@ -15,18 +15,25 @@ public class ToDo
 
 	}
 
-	public ToDo(final String id, final String summary)
+	public ToDo(final int id, final String summary)
 	{
 		this.id = id;
 		this.summary = summary;
 	}
 
-	public String getId()
+	public ToDo(final int id, final String summary, final String description)
+	{
+		this.id = id;
+		this.summary = summary;
+		this.description = description;
+	}
+
+	public int getId()
 	{
 		return id;
 	}
 
-	public void setId(final String id)
+	public void setId(final int id)
 	{
 		this.id = id;
 	}

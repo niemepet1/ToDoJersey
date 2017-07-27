@@ -23,9 +23,9 @@ public class ToDoResource
 	UriInfo uriInfo;
 	@Context
 	Request request;
-	String id;
+	int id;
 
-	public ToDoResource(final UriInfo uriInfo, final Request request, final String id)
+	public ToDoResource(final UriInfo uriInfo, final Request request, final int id)
 	{
 		this.uriInfo = uriInfo;
 		this.request = request;
