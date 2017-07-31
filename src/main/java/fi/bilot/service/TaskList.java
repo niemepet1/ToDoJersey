@@ -16,4 +16,8 @@ public class TaskList {
     public void addTask(Task task) {
         tasks.add(task);
     }
+
+    public void deleteTask(Task task) {
+        tasks.remove(task);
+    }
 }
