@@ -5,8 +5,17 @@ package fi.bilot.service;
  */
 public class Task {
     public final String description;
+    private boolean completed = false;
 
     public Task(String description) {
         this.description = description;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted() {
+        this.completed = true;
     }
 }
