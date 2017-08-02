@@ -5,6 +5,7 @@ import fi.bilot.service.TaskList;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -19,8 +20,12 @@ public class TaskResource {
 
     private JsonArray mapToJson(TaskList taskList) {
         final JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+
         for (Task task: taskList.tasks) {
-            jsonArrayBuilder.add(task.description);
+            final JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder()
+                    .add("description", task.description)
+                    .add("isCompleted", task.isCompleted());
+            jsonArrayBuilder.add(jsonObjectBuilder);
         }
         
         return jsonArrayBuilder.build();
