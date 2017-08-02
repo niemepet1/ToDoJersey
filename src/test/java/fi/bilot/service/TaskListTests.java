@@ -27,6 +27,6 @@ public class TaskListTests {
         taskList.deleteTask(task);
 
         final int taskCountAfterDeletingTask = taskList.getSize();
-        Assert.assertEquals(taskCountAfterDeletingTask, 0);
+        Assert.assertEquals(0, taskCountAfterDeletingTask);
     }
 }
