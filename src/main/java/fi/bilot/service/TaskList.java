@@ -20,4 +20,15 @@ public class TaskList {
     public void deleteTask(Task task) {
         tasks.remove(task);
     }
+
+    public TaskList getIncompleteTasks() {
+        final TaskList incompleteTasks = new TaskList();
+
+        for (Task task: tasks){
+            if (!task.isCompleted()){
+                incompleteTasks.addTask(task);
+            }
+        }
+        return incompleteTasks;
+    }
 }

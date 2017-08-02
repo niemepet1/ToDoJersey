@@ -37,4 +37,20 @@ public class TaskResource {
         
         return mapToJson(taskList);
     }
+
+    @GET
+    @Path("incompleteTasks")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonArray getIncompleteTasks() {
+        final Task task1 = new Task("Some different task");
+        final Task task2 = new Task("Another task");
+        taskList.addTask(task1);
+        taskList.addTask(task2);
+
+        task1.setCompleted();
+
+        final TaskList incompleteTasks = taskList.getIncompleteTasks();
+        return mapToJson(incompleteTasks);
+
+    }
 }
