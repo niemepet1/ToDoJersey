@@ -31,4 +31,14 @@ public class TaskList {
         }
         return incompleteTasks;
     }
+
+    public void completeTask(String description){
+        for (Task task: tasks){
+            if(task.description.equals(description)) {
+                System.out.println("Completing a task...");
+                task.setCompleted();
+            }
+        }
+        System.out.println("Finished searching tasks to complete...");
+    }
 }
