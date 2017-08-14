@@ -21,20 +21,30 @@ public class TaskList {
         tasks.remove(task);
     }
 
+    public Task getTask(int id) {
+        for (Task task : tasks) {
+            if (task.id == id) {
+                return task;
+            }
+        }
+
+        return null;
+    }
+
     public TaskList getIncompleteTasks() {
         final TaskList incompleteTasks = new TaskList();
 
-        for (Task task: tasks){
-            if (!task.isCompleted()){
+        for (Task task : tasks) {
+            if (!task.isCompleted()) {
                 incompleteTasks.addTask(task);
             }
         }
         return incompleteTasks;
     }
 
-    public void completeTask(String description){
-        for (Task task: tasks){
-            if(task.description.equals(description)) {
+    public void completeTask(String description) {
+        for (Task task : tasks) {
+            if (task.description.equals(description)) {
                 System.out.println("Completing a task...");
                 task.setCompleted();
             }
