@@ -2,12 +2,14 @@ package fi.bilot.resources;
 
 import fi.bilot.service.Task;
 import fi.bilot.service.TaskList;
+import java.util.Collection;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /*
  * Created by Serge Tsyba (serge.tsyba@bilot.fi) on Jul 31, 2017.
@@ -24,10 +26,10 @@ public class TaskResource {
                 .build();
     }
 
-    private JsonArray mapToJson(TaskList taskList) {
+    private JsonArray mapToJson(Collection<Task> tasks) {
         final JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-        for (Task task : taskList.tasks) {
+        for (Task task : tasks) {
             final JsonObject jsonObject = mapToJson(task);
             jsonArrayBuilder.add(jsonObject);
         }
@@ -35,23 +37,23 @@ public class TaskResource {
         return jsonArrayBuilder.build();
     }
 
+    private JsonArray mapToJson(TaskList taskList) {
+        return mapToJson(taskList.getTasks());
+    }
+
     @GET
     @Path("tasks")
     @Produces(MediaType.APPLICATION_JSON)
     public JsonArray getIncompleteTasks(
             @DefaultValue("false") @QueryParam("includeCompleted") Boolean includeCompleted) {
-        final Task task1 = new Task(0, "Some different task");
-        final Task task2 = new Task(1, "Another task");
-        taskList.addTask(task1);
-        taskList.addTask(task2);
-
-        task1.setCompleted();
+        taskList.createTask("Some different task");
+        taskList.createTask("Another task");
 
         if (includeCompleted == true) {
             return mapToJson(taskList);
         }
         else {
-            final TaskList incompleteTasks = taskList.getIncompleteTasks();
+            final Collection<Task> incompleteTasks = taskList.getIncompleteTasks();
             return mapToJson(incompleteTasks);
         }
     }
@@ -60,14 +62,29 @@ public class TaskResource {
     @Path("tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getTask(@PathParam("id") int id) {
-        final Task task1 = new Task(0, "Some different task");
-        final Task task2 = new Task(1, "Another task");
-        taskList.addTask(task1);
-        taskList.addTask(task2);
+        taskList.createTask("Some different task");
+        taskList.createTask("Another task");
 
-        task1.setCompleted();
-        
         final Task task = taskList.getTask(id);
         return mapToJson(task);
+    }
+
+    // {uri: "tasks/8" }
+    // tasks/8
+    @POST
+    @Path("tasks")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createTask(JsonObject taskEntity) {
+        final String decription = taskEntity.getString("descritpion");
+        final Task task = taskList.createTask(decription);
+
+        final JsonObject responseEntity = Json.createObjectBuilder()
+                .add("uri", "tasks/" + task.id)
+                .build();
+
+        return Response.status(201)
+                .entity(responseEntity.toString())
+                .build();
     }
 }
