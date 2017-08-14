@@ -1,4 +1,5 @@
 
+import fi.bilot.JsonBodyReader;
 import fi.bilot.JsonBodyWriter;
 import fi.bilot.resources.TaskResource;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class Launcher {
     public static void main(String... arguments) throws URISyntaxException, IOException {
         final ResourceConfig config = new ResourceConfig()
+                .register(JsonBodyReader.class)
                 .register(JsonBodyWriter.class)
                 .register(TaskResource.class);
         
