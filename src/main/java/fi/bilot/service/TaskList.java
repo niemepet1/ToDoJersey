@@ -20,4 +20,25 @@ public class TaskList {
     public void deleteTask(Task task) {
         tasks.remove(task);
     }
+
+    public TaskList getIncompleteTasks() {
+        final TaskList incompleteTasks = new TaskList();
+
+        for (Task task: tasks){
+            if (!task.isCompleted()){
+                incompleteTasks.addTask(task);
+            }
+        }
+        return incompleteTasks;
+    }
+
+    public void completeTask(String description){
+        for (Task task: tasks){
+            if(task.description.equals(description)) {
+                System.out.println("Completing a task...");
+                task.setCompleted();
+            }
+        }
+        System.out.println("Finished searching tasks to complete...");
+    }
 }
