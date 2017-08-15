@@ -69,22 +69,56 @@ public class TaskResource {
         return mapToJson(task);
     }
 
-    // {uri: "tasks/8" }
-    // tasks/8
     @POST
     @Path("tasks")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTask(JsonObject taskEntity) {
-        final String decription = taskEntity.getString("descritpion");
-        final Task task = taskList.createTask(decription);
+        if(taskEntity.containsKey("description")){
+            final String description = taskEntity.getString("description");
+            final Task task = taskList.createTask(description);
 
-        final JsonObject responseEntity = Json.createObjectBuilder()
-                .add("uri", "tasks/" + task.id)
-                .build();
+            final JsonObject responseEntity = Json.createObjectBuilder()
+                    .add("uri", "tasks/" + task.id)
+                    .build();
 
-        return Response.status(201)
-                .entity(responseEntity.toString())
-                .build();
+            return Response.status(201)
+                    .entity(responseEntity.toString())
+                    .build();
+        } else {
+            final JsonObject responseEntity = Json.createObjectBuilder()
+                    .add("message", "Description property was not specified")
+                    .build();
+
+            return Response.status(400)
+                    .entity(responseEntity.toString())
+                    .build();
+        }
+
+    }
+
+    @DELETE
+    @Path("tasks/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTask(@PathParam("id") int id){
+        taskList.createTask("Some different task");
+        taskList.createTask("Another task");
+
+        final Task task = taskList.getTask(id);
+
+        if(task == null){
+            final JsonObject responseEntity = Json.createObjectBuilder()
+                    .add("message", "task with id "+ id +" not found")
+                    .build();
+
+            return Response.status(404)
+                    .entity(responseEntity.toString())
+                    .build();
+
+        } else {
+            taskList.deleteTask(task);
+            return Response.status(204)
+                    .build();
+        }
     }
 }

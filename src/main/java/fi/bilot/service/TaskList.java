@@ -18,7 +18,7 @@ public class TaskList {
     }
 
     public void deleteTask(Task task) {
-        tasks.remove(task);
+        tasks.remove(task.id);
     }
 
     public int getHighestId() {
