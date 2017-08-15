@@ -106,22 +106,18 @@ public class TaskResource {
 
         final Task task = taskList.getTask(id);
 
-        if(task != null){
-            taskList.deleteTask(task);
-            final JsonObject responseEntity = Json.createObjectBuilder()
-                    .add("message", "task "+ task.id +" deleted")
-                    .build();
-            return Response.status(200)
-                    .entity(responseEntity.toString())
-                    .build();
-
-        } else {
+        if(task == null){
             final JsonObject responseEntity = Json.createObjectBuilder()
                     .add("message", "task with id "+ id +" not found")
                     .build();
 
             return Response.status(404)
                     .entity(responseEntity.toString())
+                    .build();
+
+        } else {
+            taskList.deleteTask(task);
+            return Response.status(204)
                     .build();
         }
     }
