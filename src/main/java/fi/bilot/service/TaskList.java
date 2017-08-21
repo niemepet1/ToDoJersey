@@ -1,6 +1,7 @@
 package fi.bilot.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,14 +35,25 @@ public class TaskList {
         return highestId;
     }
 
-    public Task createTask(String description) {
+    public Task createTask(String description, Date dueDate) {
         final int highestId = getHighestId();
         final int taskId = highestId + 1;
 
-        final Task task = new Task(taskId, description);
+        if (dueDate != null) {
+            final Date currentDate = new Date();
+            if (dueDate.before(currentDate)) {
+                throw new IllegalArgumentException("Due date is in the past");
+            }
+        }
+
+        final Task task = new Task(taskId, description, dueDate);
         tasks.put(task.id, task);
 
         return task;
+    }
+
+    public Task createTask(String description) {
+        return createTask(description, null);
     }
 
     public Task getTask(int id) {

@@ -2,6 +2,7 @@ package fi.bilot.resources;
 
 import fi.bilot.service.Task;
 import fi.bilot.service.TaskList;
+import java.text.ParseException;
 import java.util.Collection;
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -61,12 +62,17 @@ public class TaskResource {
     @GET
     @Path("tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonObject getTask(@PathParam("id") int id) {
+    public TaskEntity getTask(@PathParam("id") int id) throws ParseException {
         taskList.createTask("Some different task");
         taskList.createTask("Another task");
 
         final Task task = taskList.getTask(id);
-        return mapToJson(task);
+        if (task == null) {
+            throw new NotFoundException("Task with id " + id + " not found");
+        }
+        else {
+            return new TaskEntity(task);
+        }
     }
 
     @POST
@@ -74,7 +80,7 @@ public class TaskResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createTask(JsonObject taskEntity) {
-        if(taskEntity.containsKey("description")){
+        if (taskEntity.containsKey("description")) {
             final String description = taskEntity.getString("description");
             final Task task = taskList.createTask(description);
 
@@ -85,14 +91,9 @@ public class TaskResource {
             return Response.status(201)
                     .entity(responseEntity.toString())
                     .build();
-        } else {
-            final JsonObject responseEntity = Json.createObjectBuilder()
-                    .add("message", "Description property was not specified")
-                    .build();
-
-            return Response.status(400)
-                    .entity(responseEntity.toString())
-                    .build();
+        }
+        else {
+            throw new BadRequestException("Description property was not specified");
         }
 
     }
@@ -100,25 +101,23 @@ public class TaskResource {
     @DELETE
     @Path("tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteTask(@PathParam("id") int id){
+    public Response deleteTask(@PathParam("id") int id) {
         taskList.createTask("Some different task");
         taskList.createTask("Another task");
 
         final Task task = taskList.getTask(id);
 
-        if(task == null){
+        if (task == null) {
             final JsonObject responseEntity = Json.createObjectBuilder()
-                    .add("message", "task with id "+ id +" not found")
+                    .add("message", "task with id " + id + " not found")
                     .build();
 
-            return Response.status(404)
-                    .entity(responseEntity.toString())
-                    .build();
+            throw new NotFoundException(responseEntity.toString());
 
-        } else {
+        }
+        else {
             taskList.deleteTask(task);
-            return Response.status(204)
-                    .build();
+            return null;
         }
     }
 }
