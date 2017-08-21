@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/")
 public class TaskResource {
-    private final TaskList taskList = new TaskList();
+    private static final TaskList TASK_LIST = new TaskList();
 
     private JsonObject mapToJson(Task task) {
         return Json.createObjectBuilder()
@@ -47,14 +47,12 @@ public class TaskResource {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonArray getIncompleteTasks(
             @DefaultValue("false") @QueryParam("includeCompleted") Boolean includeCompleted) {
-        taskList.createTask("Some different task");
-        taskList.createTask("Another task");
 
         if (includeCompleted == true) {
-            return mapToJson(taskList);
+            return mapToJson(TASK_LIST);
         }
         else {
-            final Collection<Task> incompleteTasks = taskList.getIncompleteTasks();
+            final Collection<Task> incompleteTasks = TASK_LIST.getIncompleteTasks();
             return mapToJson(incompleteTasks);
         }
     }
@@ -63,10 +61,7 @@ public class TaskResource {
     @Path("tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public TaskEntity getTask(@PathParam("id") int id) throws ParseException {
-        taskList.createTask("Some different task");
-        taskList.createTask("Another task");
-
-        final Task task = taskList.getTask(id);
+        final Task task = TASK_LIST.getTask(id);
         if (task == null) {
             throw new NotFoundException("Task with id " + id + " not found");
         }
@@ -82,7 +77,7 @@ public class TaskResource {
     public Response createTask(JsonObject taskEntity) {
         if (taskEntity.containsKey("description")) {
             final String description = taskEntity.getString("description");
-            final Task task = taskList.createTask(description);
+            final Task task = TASK_LIST.createTask(description);
 
             final JsonObject responseEntity = Json.createObjectBuilder()
                     .add("uri", "tasks/" + task.id)
@@ -102,10 +97,7 @@ public class TaskResource {
     @Path("tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteTask(@PathParam("id") int id) {
-        taskList.createTask("Some different task");
-        taskList.createTask("Another task");
-
-        final Task task = taskList.getTask(id);
+        final Task task = TASK_LIST.getTask(id);
 
         if (task == null) {
             final JsonObject responseEntity = Json.createObjectBuilder()
@@ -116,7 +108,7 @@ public class TaskResource {
 
         }
         else {
-            taskList.deleteTask(task);
+            TASK_LIST.deleteTask(task);
             return null;
         }
     }
