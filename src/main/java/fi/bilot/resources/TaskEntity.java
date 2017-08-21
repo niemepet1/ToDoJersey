@@ -7,7 +7,7 @@ import fi.bilot.service.Task;
  * Created by Serge Tsyba (serge.tsyba@bilot.fi) on Aug 16, 2017.
  */
 public class TaskEntity {
-    @JsonProperty("id")
+    @JsonProperty("uri")
     final String uri;
     @JsonProperty("description")
     final String description;
